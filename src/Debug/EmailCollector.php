@@ -149,7 +149,7 @@ class EmailCollector extends Collector
         \ob_start();
         $configs = $this->mailer->getConfigs();
         ?>
-        <p><strong>Host:</strong> <?= \htmlentities($configs['host']) ?></p>
+        <p><strong>Host:</strong> <?= \htmlentities((string) $configs['host']) ?></p>
         <p><strong>Port:</strong> <?= \htmlentities((string) $configs['port']) ?></p>
         <?php
         return \ob_get_clean(); // @phpstan-ignore-line

@@ -26,6 +26,18 @@ final class MailerTest extends TestCase
         ]);
     }
 
+    /**
+     * Skip tests that require a live SMTP server.
+     *
+     * CI runners have no SMTP service, so these only run when SMTP_HOST is set.
+     */
+    protected function requireSmtpServer() : void
+    {
+        if (!\getenv('SMTP_HOST')) {
+            self::markTestSkipped('SMTP_HOST is not set. Skipping tests that need a live SMTP server.');
+        }
+    }
+
     public function testCrlf() : void
     {
         self::assertSame("\r\n", $this->mailer->getConfig('crlf'));
@@ -49,12 +61,14 @@ final class MailerTest extends TestCase
 
     public function testSend() : void
     {
+        $this->requireSmtpServer();
         \sleep(5);
         self::assertTrue($this->mailer->send($this->getMessage()));
     }
 
     public function testKeepAlive() : void
     {
+        $this->requireSmtpServer();
         \sleep(5);
         $smtp = new Mailer([
             'host' => \getenv('SMTP_HOST'),
@@ -86,6 +100,7 @@ final class MailerTest extends TestCase
 
     public function testFailToAuthenticateUsernameNotSet() : void
     {
+        $this->requireSmtpServer();
         \sleep(5);
         $mailer = new Mailer([
             'host' => \getenv('SMTP_HOST'),
@@ -101,6 +116,7 @@ final class MailerTest extends TestCase
 
     public function testFailToAuthenticateUsernameIsWrong() : void
     {
+        $this->requireSmtpServer();
         \sleep(5);
         $mailer = new Mailer([
             'host' => \getenv('SMTP_HOST'),
@@ -117,6 +133,7 @@ final class MailerTest extends TestCase
 
     public function testFailToAuthenticatePasswordNotSet() : void
     {
+        $this->requireSmtpServer();
         \sleep(5);
         $mailer = new Mailer([
             'host' => \getenv('SMTP_HOST'),
@@ -132,6 +149,7 @@ final class MailerTest extends TestCase
 
     public function testFailToAuthenticatePasswordIsWrong() : void
     {
+        $this->requireSmtpServer();
         \sleep(5);
         $mailer = new Mailer([
             'host' => \getenv('SMTP_HOST'),
@@ -168,6 +186,7 @@ final class MailerTest extends TestCase
 
     public function testLogs() : void
     {
+        $this->requireSmtpServer();
         \sleep(5);
         $mailer = new Mailer([
             'host' => \getenv('SMTP_HOST'),
