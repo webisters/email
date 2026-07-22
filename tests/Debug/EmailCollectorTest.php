@@ -61,6 +61,11 @@ final class EmailCollectorTest extends TestCase
 
     public function testMessagesSent() : void
     {
+        // The "Sent 1 of 1" counter only increments on a 250 reply, so this
+        // needs a real SMTP server. CI runners have none.
+        if (!\getenv('SMTP_HOST')) {
+            self::markTestSkipped('SMTP_HOST is not set. Skipping tests that need a live SMTP server.');
+        }
         $message = new Message();
         $message->addTo((string) \getenv('SMTP_ADDRESS'))
             ->setFrom((string) \getenv('SMTP_ADDRESS'))
