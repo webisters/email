@@ -186,6 +186,7 @@ final class MailerTest extends TestCase
 
     public function testLogs() : void
     {
+        $this->requireSmtpServer();
         \sleep(5);
         $mailer = new Mailer([
             'host' => \getenv('SMTP_HOST'),
